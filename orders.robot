@@ -1,9 +1,9 @@
 *** Settings ***
-Resource    Order_Resource.resource
-
-
+Resource    resources/order_resource.resource
 
 *** Test Cases ***
+
+
 Open application
 
     Given the Orders.exe application is open
@@ -70,8 +70,23 @@ Control Options
     And I apply the Restore window
     And I apply the Close window 
 
+Verification Date
+    
+    Given the Orders.exe application is open
+    When I select "Orders" in the navigation bar
+    And I choose "New Order"
+    Then a quick order form with data entry fields should be displayed (SP)
+    And Complete the data in the order form (SP)
+    When I select the "OK" button
+    Then A warning window is displayed (date Invalid)
+    And I apply the Close window 
+
+Delete File created
+    Given a test file exist will be deleted
+
 
 
    
         
   
+

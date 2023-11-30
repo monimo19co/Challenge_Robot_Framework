@@ -1,3 +1,17 @@
-# Challenge_Robot_Framework
+# Challenge Robot Framework
 
-Start the creation of the project in VS Code, Creation of the Order_Data.py class, Creation of the resource file, where all the actions that the Order.robot is going to execute with Gherkin are made, Install the gherkin2robotframework package. Start of the creation of the orders, definition of the objects, definition of the locators, paths, etc.
+This is the simplest description to start from.
+
+- Get started from a simple task template in `orders.robot`.
+  - Uses [Robot Framework](https://robocorp.com/docs/languages-and-frameworks/robot-framework/basics) syntax.
+- You can configure your robot `robot.yaml`.
+- You can configure dependencies in `conda.yaml`.
+- Resources file to use ........................ `order_resource.resource`.
+- Library ................................ `control_windows.py`.
+- Library ................................ `data_orders.py`.
+
+## Learning materials
+
+- [Robocorp Developer Training Courses](https://robocorp.com/docs/courses)
+- [Documentation links on Robot Framework](https://robocorp.com/docs/languages-and-frameworks/robot-framework)
+- [Example bots in Robocorp Portal](https://robocorp.com/portal)

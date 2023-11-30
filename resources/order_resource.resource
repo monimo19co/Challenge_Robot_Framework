@@ -1,26 +1,23 @@
 *** Settings ***
 Library    RPA.Windows
-Library    Orders_Data.py     WITH NAME    OrderData
-Library    Collections
-Library    Process
-Library    RPA.FTP
-Library    RPA.Smartsheet
-Library    OperatingSystem
-Library    Options.py    WITH NAME    Op
-
-
+Library    control_window   WITH NAME    Op
+Library    data_orders    WITH NAME    OrderData
 
 
 *** Keywords ***
+
+#a test file exist will be deleted
+    #OrderData.Delete File
 the Orders.exe application is open
+    
     Windows Run    Orders.exe
     Control Window    subname:Orders
      
 
 I select "Orders" in the navigation bar
-    &{structure} =    Print Tree    log_as_warnings=${True}    return_structure=${True}
-    Log    Structure:
-    Log Dictionary    ${structure}
+    #&{structure} =    Print Tree    log_as_warnings=${True}    return_structure=${True}
+    #Log    Structure:
+    #Log Dictionary    ${structure}
 
     Click    name:Orders and type:MenuItemControl and path:5|2
 
@@ -48,8 +45,6 @@ Complete the data in the order form
     ${State}=    OrderData.Get State
     ${Zip}=    OrderData.Get Zip
     ${CardNo}=    OrderData.Get Card Number
-    
-
     
 
     Select    id:ProductNames    ${product_option}
@@ -87,15 +82,15 @@ I use the command option to edit an order (Ctrl + E)
 Edit any field
 
     Set Focus   id:OrderForm
-    OrderData.Edit Order 01
-    ${edit_city}=    OrderData.Get City
+    OrderData.Edit Order
+    ${edit_city}=    OrderData.Get City Edited
     Send Keys   id:City    ${edit_city}
 
 I should observe that the field is edited after selecting OK
     Double Click    name:"Luisa Kohler I" and type:TextControl and path:1|3|1
-
+    ${city_edited}=    OrderData.Edit Order
     ${edited_field}    Get Text    id:City
-    ${expected}    Set Variable    Fresno
+    ${expected}    Set Variable    ${city_edited}
    Run Keyword If    "${edited_field}" == "${expected}"    Log To Console     Los textos coinciden
     ...    ELSE    Log To Console     Los textos no coinciden
    
@@ -147,20 +142,23 @@ Save as window is displayed
     ...    ELSE    Log     The 'Save as' windows has NOT been displayed 
 
 I enter the Report name in the 'File name' field
-    
+    OrderData.Report File Name
+    ${report_name}=    OrderData.Get Report File Name
     Set Focus    name:"Save As"
-    Send Keys    class:Edit    CustomerList1.tbl   
+    Send Keys    class:Edit    ${report_name}   
 
 I click on Save 
    
     Click    name:Save
 
 I have clicked on 'Open' option
-    
+    OrderData.Open Report
+    ${open_report}=    OrderData.Get Open Report
     Send Keys    id:OrdersView    key={Ctrl}O 
     Click    name:No
-    Send Keys    class:Edit    CustomerList1.tbl
-    Click    id:1  
+    Send Keys    class:Edit    ${open_report}
+    Click    id:1
+
 
 I check that the report has been imported
 
@@ -168,28 +166,72 @@ I check that the report has been imported
     ${customer}    Set Variable    Luisa Kohler I and Doris Haag
    Run Keyword If    "${imported_report}" == "${imported_report}"    Log To Console    The Report is displayed
     ...    ELSE    Log To Console     The report is not displayed 
+    Sleep    2s
     
 I apply the Maximize window
+    OrderData.Title Win 
     Send Keys    id:OrdersView    key={Ctrl}N
-    Op.Maximize Window    Orders - Untitled   
+    ${Win_title}=    OrderData.Get Title Window   
+    Op.Maximize Window    ${Win_title}   
     Sleep    2s   
 
 I apply the Minimize window
-    Op.Minimize Window    Orders - Untitled  
+    OrderData.Title Win 
+    ${Win_title}=    OrderData.Get Title Window
+    Op.Minimize Window    ${Win_title}  
     Sleep    2s
 
 I apply the Restore window
-    Op.Restore Windows    Orders - Untitled
+    OrderData.Title Win 
+    ${Win_title}=    OrderData.Get Title Window
+    Op.Restore Windows    ${Win_title}
     Sleep    2s
 
-I apply the Close window 
-    Op.Close Window    Orders - Untitled
+I apply the Close window
+    OrderData.Title Win 
+    ${Win_title}=    OrderData.Get Title Window
+    Op.Close Window    ${Win_title}
+    Sleep    2s
+    
+a quick order form with data entry fields should be displayed (SP)
+    Set Focus   id:OrderForm
+    OrderData.Sad Path
+    
+Complete the data in the order form (SP)
+
+    ${product_option}=    OrderData.Get Product Option
+    ${Customer}=    OrderData.Get Customer Name
+    ${Street}=    OrderData.Get Street
+    ${City}=    OrderData.Get City
+    ${State}=    OrderData.Get State
+    ${Zip}=    OrderData.Get Zip
+    ${CardNo}=    OrderData.Get Card Number
+    ${date}=    OrderData.Get Date Orders
     
 
-
+    Select    id:ProductNames    ${product_option}
+    Send Keys    id:Date    ${date}
+    Send Keys   id:Customer    ${Customer}
+    Send Keys   id:Street    ${Street}
+    Send Keys   id:City    ${City}
+    Send Keys   id:State    ${State} 
+    Send Keys   id:Zip    ${Zip}
+    Send Keys    id:CardNo    ${CardNo}
   
+A warning window is displayed (date Invalid)
+
+    ${date_validation}    Get Text    name:"The specified date is not valid.The date is changed to the current one." and type:TextControl and class:Static and path:3
+    ${warning}    Set Variable    The specified date is not valid.The date is changed to the current one.
+    Run Keyword If    "${date_validation}" == "${warning}"    Log To Console    The date validation is correct
+    ...    ELSE    Log To Console     The date validation is not correct
     
-    
+a test file exist will be deleted
+
+    Windows Run    C:\\Users\\monik\\Documents\\Orders
+    Click    name:CustomerList1.tbl
+    Click    name:Delete
+
+
  
 
 

@@ -1,6 +1,6 @@
 import pygetwindow as pgw
 
-class Options:
+class control_window:
 
     def __init__(self):
         pass
