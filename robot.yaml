@@ -16,6 +16,6 @@ artifactsDir: output
 PATH:
   - .
 PYTHONPATH:
-  - .
+  - 
 ignoreFiles:
   - .gitignore
