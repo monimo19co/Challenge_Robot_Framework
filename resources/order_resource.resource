@@ -1,7 +1,7 @@
 *** Settings ***
 Library    RPA.Windows
-Library    control_window   WITH NAME    Op
-Library    data_orders    WITH NAME    OrderData
+Library    ../libraries/control_window.py   WITH NAME    Op
+Library    ../libraries/data_orders.py    WITH NAME    OrderData
 
 
 *** Keywords ***
